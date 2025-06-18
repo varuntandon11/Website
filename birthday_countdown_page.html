@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Happy Birthday My Love</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      text-align: center;
+      padding: 50px;
+      margin: 0;
+      transition: background 1s;
+      color: #fff;
+    }
+
+    h1 {
+      font-size: 3em;
+      margin-bottom: 10px;
+    }
+
+    #countdown {
+      font-size: 2em;
+      margin: 20px 0;
+    }
+
+    .message {
+      font-size: 1.5em;
+      margin-top: 30px;
+      color: #ffe6f2;
+    }
+
+    .heart {
+      width: 100px;
+      height: 90px;
+      position: relative;
+      margin: 0 auto 30px;
+      animation: beat 1s infinite;
+    }
+
+    .heart::before,
+    .heart::after {
+      content: "";
+      position: absolute;
+      width: 100px;
+      height: 90px;
+      background: red;
+      border-radius: 50px 50px 0 0;
+      transform: rotate(-45deg);
+      transform-origin: 0 100%;
+    }
+
+    .heart::after {
+      left: 50px;
+      transform: rotate(45deg);
+      transform-origin: 100% 100%;
+    }
+
+    @keyframes beat {
+      0%, 100% {
+        transform: scale(1);
+      }
+      50% {
+        transform: scale(1.1);
+      }
+    }
+
+    #photo {
+      width: 200px;
+      height: auto;
+      border-radius: 15px;
+      margin: 20px auto;
+      box-shadow: 0 0 15px rgba(255,255,255,0.3);
+    }
+
+    .confetti {
+      position: fixed;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 999;
+    }
+  </style>
+</head>
+<body>
+  <div class="heart"></div>
+  <h1>Countdown to My Queen's Birthday 🎂❤️</h1>
+  <img id="photo" src="your-photo.jpg" alt="Her Beautiful Smile" />
+  <div id="countdown"></div>
+  <div class="message" id="message">For me everyday of yours is worth celebrating.I miss you every day, and I love you a little bit more with every passing second. 💖</div>
+  <canvas class="confetti" id="confettiCanvas" style="display:none;"></canvas>
+
+  <script>
+    // Color theme changes daily
+    const themes = ["#ff758c, #ff7eb3", "#a18cd1, #fbc2eb", "#ffecd2, #fcb69f", "#f6d365, #fda085", "#84fab0, #8fd3f4"];
+    const today = new Date().getDay();
+    document.body.style.background = `linear-gradient(to right, ${themes[today]})`;
+
+    const birthday = new Date("June 19, 2025 00:00:00").getTime();
+
+    const countdownFunc = setInterval(() => {
+      const now = new Date().getTime();
+      const distance = birthday - now;
+
+      if (distance <= 0) {
+        clearInterval(countdownFunc);
+        document.getElementById("countdown").style.display = "none";
+        document.getElementById("message").innerHTML = "🎉 Happy Birthday, My Love! 🎉";
+        document.getElementById("confettiCanvas").style.display = "block";
+        startConfetti();
+      } else {
+        const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+        const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+        const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+        document.getElementById("countdown").innerHTML =
+          `${days}d ${hours}h ${minutes}m ${seconds}s`;
+      }
+    }, 1000);
+
+    // Confetti animation
+    function startConfetti() {
+      const canvas = document.getElementById("confettiCanvas");
+      const ctx = canvas.getContext("2d");
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+
+      const confetti = Array.from({ length: 200 }, () => ({
+        x: Math.random() * canvas.width,
+        y: Math.random() * canvas.height - canvas.height,
+        r: Math.random() * 6 + 4,
+        d: Math.random() * 5 + 2,
+        color: `hsl(${Math.random() * 360}, 100%, 70%)`
+      }));
+
+      function draw() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        for (let p of confetti) {
+          ctx.beginPath();
+          ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+          ctx.fillStyle = p.color;
+          ctx.fill();
+        }
+        update();
+        requestAnimationFrame(draw);
+      }
+
+      function update() {
+        for (let p of confetti) {
+          p.y += p.d;
+          if (p.y > canvas.height) {
+            p.y = -10;
+            p.x = Math.random() * canvas.width;
+          }
+        }
+      }
+
+      draw();
+    }
+  </script>
+</body>
+</html>
